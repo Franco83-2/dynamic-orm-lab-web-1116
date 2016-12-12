@@ -9,11 +9,7 @@ class InteractiveRecord
   end
 
   def self.column_names
-    DB[:conn].results_as_hash = true
-    sql = "pragma table_info('#{table_name}')"
-    DB[:conn].execute(sql).map do |row|
-      row["name"]
-    end.compact
+    DB[:conn].execute("pragma table_info('#{table_name}')").map {|row| row["name"]}.compact
   end
 
   def initialize(options={})
