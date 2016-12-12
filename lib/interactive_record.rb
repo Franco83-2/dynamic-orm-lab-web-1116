@@ -11,18 +11,13 @@ class InteractiveRecord
   def self.column_names
     DB[:conn].results_as_hash = true
     sql = "pragma table_info('#{table_name}')"
-    table_info = DB[:conn].execute(sql)
-    column_names = []
-    table_info.each do |row|
-      column_names << row["name"]
-    end
-    column_names.compact
+    DB[:conn].execute(sql).map do |row|
+      row["name"]
+    end.compact
   end
 
   def initialize(options={})
-    options.each do |property, value|
-      self.send("#{property}=", value)
-    end
+    options.each {|property, value| self.send("#{property}=", value)}
   end
 
   def save
